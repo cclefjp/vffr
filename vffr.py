@@ -2,7 +2,7 @@
 
 # from vffr internal
 from unixtime import currentunixtime, aweekunixtime
-# from unixtime import agounixtime
+from unixtime import agounixtime
 from getfr import getfr
 from listfutures import listfutures
 
@@ -21,8 +21,9 @@ try:
     futures = listfutures()
     print(futures)
 
-    tstart = aweekunixtime()
+    # tstart = aweekunixtime()
     # tstart = agounixtime(hours=24)
+    tstart = agounixtime(days=30)
     tend = currentunixtime()
     # tend = agounixtime(hours=15)
 
@@ -46,13 +47,27 @@ try:
             rearranged[name]['rates'].append(rate)
             rearranged[name]['times'].append(time)
         
-        sleep(0.5)
+        sleep(0.3)
 
-    x = np.asarray(rearranged['BTC-PERP']['times'])
-    y = np.asarray(rearranged['BTC-PERP']['rates'])
-    plt.plot(x, y, label='BTC-PERP')
-    plt.show()
-    print(rearranged)
+    xdat = rearranged['BTC-PERP']['times']
+    xdat = xdat[::-1] # 新しい順に並んでいるので逆順にする
+    print('取得できた最古のタイムスタンプ:', xdat[0])
+    count = len(xdat)
+    x = np.asarray(xdat)
+
+    bundle = 10
+    i = 0
+    for future in futures:
+        ydat = rearranged[future]['rates']
+        if(len(ydat) == count):
+            y = np.asarray(ydat)
+            y = y[::-1] # 新しい順に並んでいるので逆順にする
+            plt.plot(x, y, label=future)
+        i += 1
+        if i % bundle == 0:
+            plt.legend()
+            plt.show()
+    # print(rearranged)
 
 except:
     import traceback
