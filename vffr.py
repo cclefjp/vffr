@@ -10,22 +10,18 @@ from listfutures import listfutures
 from time import sleep
 
 # from external libraries
-
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-
+# ここからメイン処理
 try:
 
     futures = listfutures()
     print(futures)
 
-    # tstart = aweekunixtime()
-    # tstart = agounixtime(hours=24)
     tstart = agounixtime(days=30)
     tend = currentunixtime()
-    # tend = agounixtime(hours=15)
 
     # 結果格納
     rearranged = {}
@@ -67,7 +63,9 @@ try:
         if i % bundle == 0:
             plt.legend()
             plt.show()
-    # print(rearranged)
+    if i % bundle != 0: # 最後の端数を表示する
+        plt.legend()
+        plt.show()
 
 except:
     import traceback
